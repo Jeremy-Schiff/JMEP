@@ -73,7 +73,6 @@ public class DoubleSolver extends Solver<Double> {
                 return (double) product;
             }
         });
-        addSynonym("times", "*");
         addOperator('^', "power", OperatorType.ParametersBeforeAndAfterOperator);
         addFunction(new Function<Double>("power") {
             @Override
@@ -84,6 +83,7 @@ public class DoubleSolver extends Solver<Double> {
                 return Math.pow(parameters.get(0), parameters.get(1));
             }
         });
+        addSynonym("times", "*");
         addOperator('*', "multiply", OperatorType.ParametersBeforeAndAfterOperator);
         addOperator('/', "divide", OperatorType.ParametersBeforeAndAfterOperator);
         addFunction(new Function<Double>("divide") {
@@ -95,8 +95,8 @@ public class DoubleSolver extends Solver<Double> {
                 return parameters.get(0) / parameters.get(1);
             }
         });
-        addOperator('+', "add", OperatorType.ParametersBeforeAndAfterOperator);
-        addFunction(new Function<Double>("add") {
+        addOperator('+', "sum", OperatorType.ParametersBeforeAndAfterOperator);
+        addFunction(new Function<Double>("sum") {
             @Override
             public Double evaluate(List<Double> parameters) throws EvaluationException {
                 if (parameters.isEmpty()) {
@@ -109,8 +109,8 @@ public class DoubleSolver extends Solver<Double> {
                 return sum;
             }
         });
-        addOperator('-', "subtract", OperatorType.ParametersBeforeAndAfterOperator);
-        addFunction(new Function<Double>("subtract") {
+        addOperator('-', "difference", OperatorType.ParametersBeforeAndAfterOperator);
+        addFunction(new Function<Double>("difference") {
             @Override
             public Double evaluate(List<Double> parameters) throws EvaluationException {
                 if (parameters.isEmpty()) {

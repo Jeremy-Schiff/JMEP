@@ -1,5 +1,6 @@
 package com.JMEP.solver;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -25,6 +26,15 @@ public abstract class Solver<ValueType> {
     }
 
     /**
+     * Constructs a Solver with no operators, no synonyms, and no functions:
+     *
+     */
+    protected Solver() {
+        evaluator = new Evaluator<>();
+        parser = new Parser<>(this, "");
+    }
+
+    /**
      * Adds a synonym to the Solver
      *
      * @param synonym The string to be replaced
@@ -32,6 +42,23 @@ public abstract class Solver<ValueType> {
      */
     public void addSynonym(String synonym, String result) {
         parser.addSynonym(synonym, result);
+    }
+
+    /**
+     * Adds a variable value to the Solver
+     *
+     * @param synonym The string to be replaced
+     * @param result  The string to replace it with
+     */
+    public void addVariable(String synonym, String result) {
+        parser.addVariable(synonym, result);
+    }
+
+    /**
+     * Clears all variable values in the solver
+     */
+    public void clearVariables() {
+        parser.clearVariables();
     }
 
     /**
@@ -68,6 +95,17 @@ public abstract class Solver<ValueType> {
         Evaluable<ValueType> parsedProblem = parser.parse(problem);
         return parsedProblem.evaluate(evaluator);
     }
+
+    /**
+     * Checks what further variables must be defined in order to solve a mathematical expression
+     *
+     * @param problem The expression to check
+     * @return A List of variables to define
+     */
+    public List<String> getUndefinedVariables(String problem) throws ParsingException {
+        return parser.getUndefinedVariables(problem);
+    }
+
 
     /**
      * Returns a value from a String representation. Note most implementations will want "" to return some sort of 0 in
