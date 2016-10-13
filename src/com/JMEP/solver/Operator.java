@@ -21,7 +21,7 @@ class Operator {
      * @param parserToUse  The parser to use in evaluating this operator
      * @param operatorType The type of operator this is, based on what parameters it uses
      */
-    public Operator(char name, String function, Parser parserToUse, OperatorType operatorType) {
+    Operator(char name, String function, Parser parserToUse, OperatorType operatorType) {
         operatorName = name;
         functionName = function;
         type = operatorType;
@@ -33,7 +33,7 @@ class Operator {
      *
      * @return The name of the operator
      */
-    public char getOperatorName() {
+    char getOperatorName() {
         return operatorName;
     }
 

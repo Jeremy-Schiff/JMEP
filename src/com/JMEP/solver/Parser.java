@@ -15,6 +15,8 @@ class Parser<ValueType> {
     public static final char comma = ',';
     //a list of the synonyms to be used in parsing ie replacing all instances of "sum" to "add"
     private final Map<String, String> synonyms = new HashMap<>();
+    //a list of the variables to be used in parsing ie replacing all instances of "x" to "3"
+    private final Map<String, String> variables = new HashMap<>();
     //a list of the operators this parser needs to account for
     private final List<Operator> operators = new ArrayList<>();
     //a list of the function names in this parser
@@ -43,6 +45,24 @@ class Parser<ValueType> {
      */
     public void addSynonym(String synonym, String result) {
         synonyms.put(synonym, result);
+    }
+
+    /**
+     * Adds a variable to this parser
+     *
+     * @param synonym The string to be replaced
+     * @param result  The string to replace it with
+     */
+
+    public void addVariable(String synonym, String result) {
+        variables.put(synonym, result);
+    }
+
+    /**
+     * Clears all variable values in the solver
+     */
+    public void clearVariables() {
+        variables.clear();
     }
 
     /**
@@ -327,6 +347,9 @@ class Parser<ValueType> {
             for (Map.Entry<String, String> entry : synonyms.entrySet()) {
                 rawInput = rawInput.replaceAll(entry.getKey(), entry.getValue());
             }
+            for (Map.Entry<String, String> entry : variables.entrySet()) {
+                rawInput = rawInput.replaceAll(entry.getKey(), entry.getValue());
+            }
             for (Operator op : operators) {
                 rawInput = op.evaluate(rawInput);
             }
@@ -378,4 +401,60 @@ class Parser<ValueType> {
         return new EvaluableFunction<>(functName, evaluableParameters);
     }
 
+    /**
+     * Checks what variables must be defined in order to solve a mathematical expression
+     *
+     * @param problem The expression to check
+     * @return A List of variables to define
+     */
+    public List<String> getUndefinedVariables(String problem) throws ParsingException {
+        ProtoFunction cleanedInput = cleanInput(problem);
+        return getUndefinedVariables(cleanedInput);
+    }
+
+    /**
+     * Checks what variables must be defined in order to parse a ProtoFunction
+     *
+     * @param problem The expression to check
+     * @return A List of variables to define
+     */
+    private List<String> getUndefinedVariables(ProtoFunction problem) throws ParsingException {
+        if (problem.isSimple()) {
+            List<String> out = new ArrayList();
+            try {
+                new EvaluableNum<>(solver.toValue(problem.getData()));
+            } catch (Exception e) {
+                out.add(problem.getData());
+            }
+            return out;
+        }
+        List<String> variablesToAdd = new ArrayList<>();
+        String potFunctName = problem.getData();
+        String functionPart = "";
+        //get the longest function this could represent
+        for (String potentialName : functions) {
+            if (potFunctName.endsWith(potentialName)) {
+                functionPart = potentialName;
+            }
+        }
+        //get the part of the potential function that isn't in the function
+        String rest = potFunctName.substring(0, potFunctName.lastIndexOf(functionPart));
+        if (functionPart.isEmpty()) {
+            rest = potFunctName;
+        }
+        if (!rest.isEmpty()) {
+            try {
+                new EvaluableNum<>(solver.toValue(rest));
+            } catch (ParsingException e) {
+                variablesToAdd.add(rest);
+            }
+            problem.updateData(functionPart);
+            variablesToAdd.addAll(getUndefinedVariables(problem));
+        } else {
+            for (ProtoFunction param : problem.getParams()) {
+                variablesToAdd.addAll(getUndefinedVariables(param));
+            }
+        }
+        return variablesToAdd;
+    }
 }

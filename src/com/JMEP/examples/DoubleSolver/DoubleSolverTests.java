@@ -1,6 +1,5 @@
 package com.JMEP.examples.DoubleSolver;
 
-
 import com.JMEP.solver.EvaluationException;
 import com.JMEP.solver.Function;
 import com.JMEP.solver.OperatorType;
@@ -30,17 +29,17 @@ class DoubleSolverTests {
             }
         });
         solver.addOperator('★', "star", OperatorType.ParameterAfterOperator);
-        test("add(3,4)", 7);
-        test("add(3,4", 7);
-        test("add(3,4,5", 12);
-        test("(add(3,4))", 7);
-        test("add((3),(4))", 7);
-        test("(add((3),(4))", 7);
-        test("(add((3),(4", 7);
-        test("subtract(3,add(4,5))", -6);
-        test("subtract(3,add(4,5)", -6);
-        test("subtract(3,add(4,5", -6);
-        test("add(3,subtract(4,5", 2);
+        test("sum(3,4)", 7);
+        test("sum(3,4", 7);
+        test("sum(3,4,5", 12);
+        test("(sum(3,4))", 7);
+        test("sum((3),(4))", 7);
+        test("(sum((3),(4))", 7);
+        test("(sum((3),(4", 7);
+        test("difference(3,sum(4,5))", -6);
+        test("difference(3,sum(4,5)", -6);
+        test("difference(3,sum(4,5", -6);
+        test("sum(3,difference(4,5", 2);
         test("multiply(4,5", 20);
         test("multiply(4,5,6", 120);
         test("4(5)", 20);
@@ -49,19 +48,19 @@ class DoubleSolverTests {
         test("(4)(5", 20);
         test("(4)5", 20);
         test("4(5)6", 120);
-        test("5add(3,subtract(4,5", 10);
-        test("5(add(3,subtract(4,5", 10);
+        test("sum(3,difference(4,5", 2);
+        test("5(sum(3,difference(4,5", 10);
         test("3!", 6);
-        test("add(3,3!)", 9);
-        test("add(3!,3)", 9);
-        test("add(3!,3)2", 18);
-        test("add((3!),3)2", 18);
+        test("sum(3,3!)", 9);
+        test("sum(3!,3)", 9);
+        test("sum(3!,3)2", 18);
+        test("sum((3!),3)2", 18);
         test("3!!", 720);
         test("★2", 6);
-        test("add(3,★2)", 9);
-        test("add(★2,3)", 9);
-        test("add(★2,3)2", 18);
-        test("add((★2),3)2", 18);
+        test("sum(3,★2)", 9);
+        test("sum(★2,3)", 9);
+        test("sum(★2,3)2", 18);
+        test("sum((★2),3)2", 18);
         test("★★2", 5040);
         test("2+2", 4);
         test("(2)+2", 4);
@@ -86,6 +85,15 @@ class DoubleSolverTests {
         test("tan(0)", 0);
         test("log(10)", 1);
         test("ln(" + Math.E + ")", 1);
+        solver.addSynonym("what", "");
+        solver.addSynonym("is", "");
+        solver.addSynonym("the", "");
+        solver.addSynonym("product", "multiply");
+        solver.addSynonym("of", "(");
+        solver.addSynonym("and", ",");
+        solver.addSynonym(" ", "");
+        test("what is the product of 3 and 4", 12);
+        test("what is the sum of 3 and 4", 7);
         System.out.println("Tests Complete");
     }
 
