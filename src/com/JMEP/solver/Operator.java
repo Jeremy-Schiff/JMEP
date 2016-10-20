@@ -79,7 +79,7 @@ class Operator {
             if (parser.getOpeners().contains(endSection.charAt(paramIndex))) {
                 String functArea = endSection.substring(0, paramIndex);
                 //don't separate things like f(x) into f, (x)
-                if (functArea.isEmpty() || parser.hasFunction(functArea)) {
+                if (functArea.isEmpty() || parser.hasFunction(functArea) || functArea.equals(operatorName + "")) {
                     paramIndex = parser.getIndexOfCloser(paramIndex, endSection) + 1;
                 }
             }
