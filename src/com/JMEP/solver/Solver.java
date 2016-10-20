@@ -1,7 +1,7 @@
 package com.JMEP.solver;
 
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Solves a mathematical expression in String form
@@ -100,9 +100,9 @@ public abstract class Solver<ValueType> {
      * Checks what further variables must be defined in order to solve a mathematical expression
      *
      * @param problem The expression to check
-     * @return A List of variables to define
+     * @return A Set of variables to define
      */
-    public List<String> getUndefinedVariables(String problem) throws ParsingException {
+    public Set<String> getUndefinedVariables(String problem) throws ParsingException {
         return parser.getUndefinedVariables(problem);
     }
 

@@ -55,7 +55,7 @@ class Parser<ValueType> {
      */
 
     public void addVariable(String synonym, String result) {
-        variables.put(synonym, result);
+        variables.put(synonym, openingParentheses + result + closedParentheses);
     }
 
     /**
@@ -407,7 +407,7 @@ class Parser<ValueType> {
      * @param problem The expression to check
      * @return A List of variables to define
      */
-    public List<String> getUndefinedVariables(String problem) throws ParsingException {
+    public Set<String> getUndefinedVariables(String problem) throws ParsingException {
         ProtoFunction cleanedInput = cleanInput(problem);
         return getUndefinedVariables(cleanedInput);
     }
@@ -418,9 +418,9 @@ class Parser<ValueType> {
      * @param problem The expression to check
      * @return A List of variables to define
      */
-    private List<String> getUndefinedVariables(ProtoFunction problem) throws ParsingException {
+    private Set<String> getUndefinedVariables(ProtoFunction problem) throws ParsingException {
         if (problem.isSimple()) {
-            List<String> out = new ArrayList();
+            Set<String> out = new HashSet<>();
             try {
                 new EvaluableNum<>(solver.toValue(problem.getData()));
             } catch (Exception e) {
@@ -428,7 +428,7 @@ class Parser<ValueType> {
             }
             return out;
         }
-        List<String> variablesToAdd = new ArrayList<>();
+        Set<String> variablesToAdd = new HashSet<>();
         String potFunctName = problem.getData();
         String functionPart = "";
         //get the longest function this could represent

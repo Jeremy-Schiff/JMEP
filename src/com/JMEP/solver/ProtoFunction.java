@@ -5,7 +5,10 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.stream.Collectors;
 
-//TODO
+/**
+ * A ProtoFunction is an intermediate step between a String and an Evaluable.
+ * It is merely for use, it has no real mathematical meaning.
+ */
 class ProtoFunction {
     //the list of parameters to this function
     private List<ProtoFunction> params = new ArrayList<>();
